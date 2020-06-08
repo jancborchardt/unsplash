@@ -45,8 +45,13 @@ class AdminSettings implements ISettings {
     public function getForm(): TemplateResponse {
         return new TemplateResponse('unsplash', 'settings/admin', [
             'saveSettingsUrl' => $this->urlGenerator->linkToRouteAbsolute('unsplash.admin_settings.set'),
+            'availableProvider'     => $this->settings->getAllImageProvider(),
+            'selectedProvider'     => $this->settings->getImageProvider(),
+            'styleHeader'     => $this->settings->getServerStyleHeaderEnabled(),
             'styleLogin'      => $this->settings->getServerStyleLoginEnabled(),
-            'styleHeader'     => $this->settings->getServerStyleHeaderEnabled()
+            'styleTint'     => $this->settings->isTintAllowed(),
+            'styleStrengthColor'     => $this->settings->getColorStrength(),
+            'styleStrengthBlur'     => $this->settings->getBlurStrength()
         ]);
     }
 

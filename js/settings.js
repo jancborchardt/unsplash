@@ -3,6 +3,19 @@
         this._timer = [];
         this.saveUrl = $('#unsplash-settings').data().save;
 
+		$('#unsplash-style-tinting').on(
+			'change',
+			(e) => {
+				let $target = $(e.target)
+                if($target[0].checked){
+					$('#unsplash-style-color-strenght').prop('disabled', false);
+                }else{
+					$('#unsplash-style-color-strenght').prop('disabled', true);
+				}
+			}
+		);
+
+
         $('[data-setting]').on(
             'change',
             (e) => {
@@ -13,6 +26,10 @@
                 if($target.attr('type') === 'checkbox') {
                     value = $target[0].checked ? 'true':'false';
                 }
+
+				if($target.attr('type') === 'select') {
+					value = $target.val();
+				}
 
                 _setValue(key, value);
             }

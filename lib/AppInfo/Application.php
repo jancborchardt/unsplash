@@ -54,11 +54,39 @@ class Application extends App {
         /** @var SettingsService $settings */
         $settings = $this->getContainer()->query(SettingsService::class);
 
+		$unsplashScript = \OC::$WEBROOT;
+
         if($settings->getUserStyleHeaderEnabled()) {
-            Util::addStyle('unsplash', 'header');
+            //Util::addStyle('unsplash', 'header');
+			Util::addHeader(
+				'link',
+				[
+					'rel'  => "stylesheet",
+					'type' =>"text/css",
+					'href' => $unsplashScript."/apps/unsplash/lib/CssBuilder/header.php",
+				]
+			);
+            //Util::addStyle('unsplash', 'header');
+			\OCP\Util::addHeader(
+				'link',
+				[
+					'rel'  => "stylesheet",
+					'type' =>"text/css",
+					'href' => $unsplashScript."/apps/unsplash/lib/CssBuilder/header.php",
+				]
+			);
         }
+
         if($settings->getServerStyleLoginEnabled()) {
-            Util::addStyle('unsplash', 'login');
+            //Util::addStyle('unsplash', 'login');
+			Util::addHeader(
+				'link',
+				[
+					'rel'  => "stylesheet",
+					'type' =>"text/css",
+					'href' => $unsplashScript."/apps/unsplash/lib/CssBuilder/login.php",
+				]
+			);
         }
     }
 
@@ -74,8 +102,11 @@ class Application extends App {
         if($settings->getUserStyleHeaderEnabled() || $settings->getServerStyleLoginEnabled()) {
             $manager = $this->getContainer()->getServer()->getContentSecurityPolicyManager();
             $policy  = new ContentSecurityPolicy();
-            $policy->addAllowedImageDomain('https://source.unsplash.com');
-            $policy->addAllowedImageDomain('https://images.unsplash.com');
+
+			$urls = $settings->getWhitelistingUrls();
+			foreach ($urls as &$value) {
+				$policy->addAllowedImageDomain($value);
+			}
             $manager->addDefaultPolicy($policy);
         }
     }
